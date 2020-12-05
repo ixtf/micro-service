@@ -1,0 +1,6 @@
+rootProject.name = 'micro-service'
+include 'core'
+include 'api'
+include 'vertx'
+include 'netifi'
+

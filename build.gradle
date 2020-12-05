@@ -1,0 +1,50 @@
+plugins {
+    id "idea"
+    id "maven"
+    id "maven-publish"
+    id "io.spring.dependency-management" version "1.0.9.RELEASE" apply false
+    id "io.freefair.lombok" version "5.1.0" apply false
+    id "com.github.johnrengelman.shadow" version "6.0.0" apply false
+    id "com.palantir.docker" version "0.25.0" apply false
+    id "com.google.protobuf" version "0.8.12" apply false
+}
+
+subprojects {
+    group "com.github.ixtf"
+    version "1.0"
+
+    apply plugin: "idea"
+    apply plugin: "maven"
+    apply plugin: "maven-publish"
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "io.freefair.lombok"
+
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2" }
+        maven { url "https://jitpack.io" }
+        maven { url "http://maven.geo-solutions.it" }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "com.github.ixtf:bom:${bomVersion}"
+        }
+
+        dependencies {
+            dependency "com.google.protobuf:protobuf-java:${protobufVersion}"
+            dependency "com.google.protobuf:protoc:${protobufVersion}"
+            dependency "io.rsocket:rsocket-core:${rsocketVersion}"
+            dependency "io.rsocket:rsocket-transport-netty:${rsocketVersion}"
+            dependency "io.rsocket.rpc:rsocket-rpc-protobuf:${rsocketRpcVersion}"
+            dependency "io.rsocket.rpc:rsocket-rpc-core:${rsocketRpcVersion}"
+            dependency "io.projectreactor.netty:reactor-netty:0.8.20.RELEASE"
+        }
+    }
+}
+

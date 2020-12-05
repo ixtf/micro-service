@@ -1,0 +1,47 @@
+plugins {
+    id "application"
+    id "io.freefair.lombok"
+    id "com.github.johnrengelman.shadow"
+    id "com.palantir.docker"
+}
+
+dependencies {
+    implementation "ch.qos.logback:logback-classic"
+    implementation "com.google.inject:guice"
+    implementation "io.vertx:vertx-config-yaml"
+    implementation "io.vertx:vertx-hazelcast"
+    implementation "io.vertx:vertx-web"
+    implementation "io.vertx:vertx-health-check"
+    implementation "io.vertx:vertx-micrometer-metrics"
+    implementation "io.micrometer:micrometer-registry-prometheus:1.6.1"
+    implementation "io.jaegertracing:jaeger-client"
+    implementation "io.vertx:vertx-auth-oauth2"
+
+    testImplementation "io.projectreactor:reactor-tools"
+}
+
+mainClassName = "com.github.ixtf.api.ApiLauncher"
+jar.manifest {
+    attributes(
+            'Main-Verticle': "com.github.ixtf.api.MainVerticle",
+            'Implementation-Title': name,
+            'Implementation-Version': version,
+            'Built-By': System.getProperty('user.name'),
+            'Built-JDK': System.getProperty('java.version'),
+            'Source-Compatibility': sourceCompatibility,
+            'Target-Compatibility': targetCompatibility
+    )
+}
+
+shadowJar {
+    mergeServiceFiles()
+    archiveName "fat.jar"
+}
+docker {
+    dependsOn shadowJar
+    name "ixtf/${project.name}:${project.version}"
+    buildArgs([BUILD_VERSION: "${project.version}"])
+    files tasks.shadowJar.outputs
+    noCache true
+}
+
