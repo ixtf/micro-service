@@ -71,4 +71,15 @@ public interface ApiContext {
         return injectDeliveryOptions(spanOpt());
     }
 
+    default Map injectMap(Optional<Span> spanOpt) {
+        final Map map = J.newHashMap();
+        tracerOpt().ifPresent(tracer -> spanOpt.map(Span::context).ifPresent(spanContext -> tracer.inject(spanContext, TEXT_MAP, new TextMapAdapter(map))));
+        principalOpt().map(Principal::getName).ifPresent(it -> map.put(Principal.class.getName(), it));
+        return map;
+    }
+
+    default Map injectMap() {
+        return injectMap(spanOpt());
+    }
+
 }
