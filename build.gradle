@@ -10,7 +10,7 @@ plugins {
 }
 
 subprojects {
-    group "com.github.ixtf"
+    group "com.github.ixtf.micro-service"
     version "1.0"
 
     apply plugin: "idea"
