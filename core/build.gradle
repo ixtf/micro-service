@@ -5,7 +5,7 @@ plugins {
 dependencies {
     compile "com.github.ixtf.japp:guice"
     compile "io.projectreactor:reactor-core"
-    compile "io.vertx:vertx-core"
+    compile "io.vertx:vertx-web"
     compile "javax:javaee-api"
     compile "org.hibernate.validator:hibernate-validator"
     compile "org.glassfish:javax.el"
