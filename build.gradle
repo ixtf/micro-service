@@ -37,6 +37,7 @@ subprojects {
         }
 
         dependencies {
+            dependency "io.micrometer:micrometer-registry-prometheus:1.6.1"
             dependency "com.google.protobuf:protobuf-java:${protobufVersion}"
             dependency "com.google.protobuf:protoc:${protobufVersion}"
             dependency "io.rsocket:rsocket-core:${rsocketVersion}"
