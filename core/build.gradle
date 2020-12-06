@@ -4,14 +4,14 @@ plugins {
 
 dependencies {
     compile "com.github.ixtf.japp:guice"
+    compile "jakarta.ws.rs:jakarta.ws.rs-api"
     compile "io.projectreactor:reactor-core"
     compile "io.vertx:vertx-web"
     compile "io.vertx:vertx-health-check"
     compile "io.vertx:vertx-micrometer-metrics"
     compile "io.micrometer:micrometer-registry-prometheus"
-    compile "javax:javaee-api"
     compile "org.hibernate.validator:hibernate-validator"
-    compile "org.glassfish:javax.el"
+    compile "org.glassfish:jakarta.el"
     compile "io.jaegertracing:jaeger-client"
 
     compileOnly "com.github.ixtf.persistence:mongo"

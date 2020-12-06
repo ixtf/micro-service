@@ -5,8 +5,10 @@ plugins {
 dependencies {
     compile project(":core")
     compile "com.netifi:netifi-broker-client"
-    compile "net.bytebuddy:byte-buddy"
     compile "com.google.protobuf:protobuf-java"
+    compile "net.bytebuddy:byte-buddy"
+
+    compileOnly "io.projectreactor.rabbitmq:reactor-rabbitmq"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

@@ -3,13 +3,12 @@ package com.github.ixtf.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.ixtf.japp.core.J;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Delivery;
 import com.sun.security.auth.UserPrincipal;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.TextMapAdapter;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import lombok.SneakyThrows;
 
@@ -41,6 +40,19 @@ public class Util {
         return checkAndGetCommand(command);
     }
 
+    public static <T> T checkAndGetCommand(Class<T> clazz, JsonNode jsonNode) {
+        final T command = MAPPER.convertValue(jsonNode, clazz);
+        return checkAndGetCommand(command);
+    }
+
+    public static <T> T checkAndGetCommand(Class<T> clazz, JsonObject jsonObject) {
+        return checkAndGetCommand(clazz, jsonObject.encode());
+    }
+
+    public static <T> T checkAndGetCommand(Class<T> clazz, JsonArray jsonArray) {
+        return checkAndGetCommand(clazz, jsonArray.encode());
+    }
+
     public static <T> T checkAndGetCommand(T command) {
         final var validatorFactory = Validation.buildDefaultValidatorFactory();
         final var validator = validatorFactory.getValidator();
@@ -64,6 +76,14 @@ public class Util {
                 .orElseGet(JsonObject::new);
     }
 
+    public static Optional<Span> spanOpt(final Optional<Tracer> tracerOpt, final String operationName, final Map map) {
+        return tracerOpt.map(tracer -> {
+            final var spanBuilder = tracer.buildSpan(operationName);
+            ofNullable(tracer.extract(TEXT_MAP, new TextMapAdapter(map))).ifPresent(spanBuilder::asChildOf);
+            return spanBuilder.start();
+        });
+    }
+
     public static Optional<Span> spanOpt(final Optional<Tracer> tracerOpt, final String operationName, final Message message) {
         return tracerOpt.map(tracer -> {
             final var spanBuilder = tracer.buildSpan(operationName);
@@ -81,12 +101,12 @@ public class Util {
                 .map(UserPrincipal::new);
     }
 
-    public static Optional<Span> spanOpt(final Optional<Tracer> tracerOpt, final String operationName, final Delivery delivery) {
+    public static Optional<Span> spanOpt(final Optional<Tracer> tracerOpt, final String operationName, final com.rabbitmq.client.Delivery delivery) {
         return tracerOpt.map(tracer -> {
             final var spanBuilder = tracer.buildSpan(operationName);
             final var map = Optional.ofNullable(delivery)
-                    .map(Delivery::getProperties)
-                    .map(AMQP.BasicProperties::getHeaders)
+                    .map(com.rabbitmq.client.Delivery::getProperties)
+                    .map(com.rabbitmq.client.AMQP.BasicProperties::getHeaders)
                     .map(Map::entrySet)
                     .stream().parallel()
                     .flatMap(Collection::parallelStream)

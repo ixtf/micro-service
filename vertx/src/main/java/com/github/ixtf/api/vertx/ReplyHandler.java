@@ -64,7 +64,7 @@ public class ReplyHandler implements Handler<Message<Object>> {
     public void handle(Message<Object> reply) {
         final var ctx = new VertxContext(this, reply);
         final var spanOpt = ctx.spanOpt();
-        Mono.fromCallable(() -> method.invoke(instance, ctx))
+        Mono.fromCallable(() -> Mono.justOrEmpty(method.invoke(instance, ctx)))
                 .flatMap(ApiResponse::bodyMono)
                 .subscribe(invoke -> {
                     if (invoke instanceof ApiResponse) {
