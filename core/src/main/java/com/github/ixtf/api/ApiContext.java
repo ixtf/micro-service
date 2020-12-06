@@ -2,6 +2,8 @@ package com.github.ixtf.api;
 
 import com.github.ixtf.japp.core.J;
 import com.sun.security.auth.UserPrincipal;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.util.AsciiString;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.TextMapAdapter;
@@ -36,6 +38,10 @@ public interface ApiContext {
 
     default String header(String key) {
         return headers().get(key);
+    }
+
+    default String header(AsciiString key) {
+        return headers().get(key.toString());
     }
 
     default Optional<Principal> principalOpt() {
