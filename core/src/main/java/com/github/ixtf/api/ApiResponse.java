@@ -47,10 +47,7 @@ public class ApiResponse {
         if (o == null) {
             return Mono.just(StringUtils.EMPTY);
         }
-        if (o instanceof String) {
-            return Mono.just((String) o);
-        }
-        if (o instanceof byte[] || o instanceof ApiResponse) {
+        if (o instanceof String || o instanceof byte[] || o instanceof ApiResponse) {
             return Mono.just(o);
         }
         if (o instanceof JsonObject) {

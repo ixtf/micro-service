@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static com.github.ixtf.api.ApiResponse.bodyMono;
 import static com.github.ixtf.japp.GuiceModule.getInstance;
@@ -64,13 +65,13 @@ public class ReplyHandler implements Handler<Message<Object>> {
     public void handle(Message<Object> reply) {
         final var ctx = new VertxContext(this, reply);
         final var spanOpt = ctx.spanOpt();
-        Mono.fromCallable(() -> Mono.justOrEmpty(method.invoke(instance, ctx)))
-                .flatMap(ApiResponse::bodyMono)
-                .subscribe(invoke -> {
-                    if (invoke instanceof ApiResponse) {
-                        reply(reply, (ApiResponse) invoke, spanOpt);
+        Mono.fromCallable(() -> bodyMono(method.invoke(instance, ctx)))
+                .flatMap(Function.identity())
+                .subscribe(it -> {
+                    if (it instanceof ApiResponse) {
+                        reply(reply, (ApiResponse) it, spanOpt);
                     } else {
-                        bodyMono(invoke).subscribe(it -> reply(reply, it, new DeliveryOptions(), spanOpt), e -> fail(reply, e, spanOpt));
+                        reply(reply, it, new DeliveryOptions(), spanOpt);
                     }
                 }, e -> fail(reply, e, spanOpt));
     }

@@ -2,6 +2,7 @@ package test;
 
 import com.github.ixtf.api.ApiLauncher;
 import com.github.ixtf.api.MainVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import lombok.extern.slf4j.Slf4j;
