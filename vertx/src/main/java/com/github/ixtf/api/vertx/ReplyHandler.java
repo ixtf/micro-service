@@ -3,6 +3,7 @@ package com.github.ixtf.api.vertx;
 import com.github.ixtf.api.ApiAction;
 import com.github.ixtf.api.ApiResponse;
 import com.github.ixtf.japp.core.J;
+import com.github.ixtf.japp.core.exception.JError;
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.opentracing.Span;
@@ -100,7 +101,9 @@ public class ReplyHandler implements Handler<Message<Object>> {
 
     private void fail(Message<Object> reply, Throwable e, Optional<Span> spanOpt) {
         reply.fail(400, e.getMessage());
-        log.error(address, e);
+        if (!(e instanceof JError)) {
+            log.error(address, e);
+        }
         spanOpt.ifPresent(span -> span.setTag(Tags.ERROR, true).log(e.getMessage()).finish());
     }
 

@@ -10,8 +10,6 @@ dependencies {
     compile "io.vertx:vertx-health-check"
     compile "io.vertx:vertx-micrometer-metrics"
     compile "io.micrometer:micrometer-registry-prometheus"
-    compile "org.hibernate.validator:hibernate-validator"
-    compile "org.glassfish:jakarta.el"
     compile "io.jaegertracing:jaeger-client"
 
     compileOnly "com.github.ixtf.persistence:mongo"

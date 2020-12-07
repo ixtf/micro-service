@@ -14,8 +14,8 @@ public class ApiDebug extends ApiLauncher {
     public static void main(String[] args) {
         ReactorDebugAgent.init();
 
-//        System.setProperty("vertx.hazelcast.config", "/data/api/cluster.xml");
-//        System.setProperty("hazelcast.local.publicAddress", "172.10.10.111");
+        System.setProperty("vertx.hazelcast.config", "/data/api/cluster.xml");
+        System.setProperty("hazelcast.local.publicAddress", "172.10.10.111");
         new ApiDebug().dispatch(new String[]{"-cluster"});
 
 //        new ApiDebug().dispatch(args);
